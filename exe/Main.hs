@@ -23,7 +23,7 @@ data GFlang  = GFeng | GFmalay deriving Show
 
 data InputOpts = InputOpts
   { format   :: Format
-  , filepath :: FilePath --Maybe FilePath
+  , filepath :: Maybe FilePath
   } deriving Show
 
 optsParse :: Parser InputOpts
@@ -48,5 +48,10 @@ main = do
                                                <> header "mini-l4 - minimum l4? miniturised l4?")
   opts <- customExecParser (prefs showHelpOnError) optsParse'
 
-  contents <- readFile $ filepath opts
-  process (filepath opts) contents
+  case filepath opts of
+    Just fname -> do
+      contents <- readFile fname
+      process fname contents
+    Nothing -> do
+      -- contents <- getContents
+      putStrLn "oops, have not implemented stdin yet. sorry!"
